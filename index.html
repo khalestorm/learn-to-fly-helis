@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A free interactive tracker for the RCHN Pilot Proficiency Program — 179 RC helicopter maneuvers across 7 levels, from first hover to advanced 3D. Track status, notes, and witness sign-offs for every maneuver.">
+<meta property="og:title" content="Pilot Proficiency Log — RCHN Maneuver Tracker">
+<meta property="og:description" content="Free interactive tracker for the RCHN Pilot Proficiency Program's 179 RC helicopter maneuvers.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%2312161B'/%3E%3Cline x1='10' y1='30' x2='90' y2='30' stroke='%23E8A33D' stroke-width='6' stroke-linecap='round'/%3E%3Cline x1='50' y1='30' x2='50' y2='78' stroke='%23E8A33D' stroke-width='6' stroke-linecap='round'/%3E%3Cline x1='30' y1='78' x2='70' y2='78' stroke='%23E8A33D' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>Pilot Proficiency Log — RCHN Maneuver Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #12161B;
+    --panel: #1A2027;
+    --panel-2: #202832;
+    --row-alt: #1D242C;
+    --border: #2B333D;
+    --text: #E9EDF1;
+    --text-dim: #8D98A3;
+    --text-faint: #5C6670;
+    --amber: #E8A33D;
+    --amber-dim: #7A5C28;
+    --green: #4FA073;
+    --green-dim: #2C4A3A;
+    --red: #C1584B;
+    --red-dim: #4A2D28;
+    --blue: #5B8FBF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: radial-gradient(1200px 600px at 50% -10%, #1B2129 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 28px 16px 80px;
+  }
+  .wrap{ max-width: 980px; margin: 0 auto; }
+
+  /* Header */
+  .header{
+    display:flex; flex-direction:column; gap: 14px;
+    padding: 26px 28px 22px;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: repeating-linear-gradient(90deg, rgba(232,163,61,0.05) 0 1px, transparent 1px 42px);
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--amber); font-weight: 500;
+  }
+  h1{
+    font-family:'Oswald', sans-serif;
+    font-weight: 600; letter-spacing: 0.01em;
+    font-size: 30px; margin: 0; color: var(--text);
+    text-transform: uppercase;
+  }
+  .sub{ color: var(--text-dim); font-size: 13.5px; margin-top: -6px; }
+  .credit{ color: var(--text-faint); font-size: 12px; margin-top: -4px; }
+  .credit a{ color: var(--amber); text-decoration: none; }
+  .credit a:hover{ text-decoration: underline; }
+
+  /* Tape gauge */
+  .gauge{ margin-top: 8px; }
+  .gauge-top{ display:flex; justify-content: space-between; align-items:baseline; margin-bottom: 6px; }
+  .gauge-label{ font-family:'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text-dim); letter-spacing: 0.05em; }
+  .gauge-num{ font-family:'JetBrains Mono', monospace; font-size: 13px; color: var(--amber); }
+  .gauge-track{
+    position: relative; height: 22px; border-radius: 4px;
+    background: #0F1317; border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .gauge-fill{
+    height: 100%;
+    background: linear-gradient(90deg, #B67A2B, var(--amber));
+    transition: width 0.35s ease;
+  }
+  .gauge-ticks{
+    position:absolute; inset:0;
+    background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.35) 0 1px, transparent 1px 10%);
+  }
+
+  /* Toolbar */
+  .toolbar{
+    display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    padding: 14px 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    position: sticky; top: 10px; z-index: 20;
+    backdrop-filter: blur(6px);
+  }
+  .toolbar input[type="text"], .toolbar select{
+    background: #10151A; border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family:'IBM Plex Sans',sans-serif;
+  }
+  .toolbar input[type="text"]{ flex: 1 1 200px; min-width: 140px; }
+  .btn{
+    font-family:'IBM Plex Sans',sans-serif;
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+    padding: 8px 13px; border-radius: 8px; font-size: 12.5px; cursor:pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .btn:hover{ border-color: var(--amber); }
+  .btn.primary{ background: linear-gradient(180deg, #F0B457, var(--amber)); color: #211505; border: none; font-weight: 600; }
+  .btn.primary:hover{ filter: brightness(1.06); }
+  .btn.danger{ color: var(--red); border-color: var(--red-dim); }
+  .btn.danger:hover{ background: var(--red-dim); border-color: var(--red); }
+  #importFile{ display:none; }
+  .save-indicator{
+    font-family:'JetBrains Mono', monospace; font-size: 11px; color: var(--text-faint);
+    margin-left: auto; padding: 4px 8px; border-radius: 6px; transition: color 0.2s ease, background 0.2s ease;
+  }
+  .save-indicator.flash{ color: var(--green); background: var(--green-dim); }
+  .banner{
+    background: var(--red-dim); border: 1px solid var(--red);
+    color: #F3D9D5; font-size: 12.5px; line-height: 1.5;
+    padding: 12px 16px; border-radius: 10px; margin-bottom: 14px;
+  }
+
+  /* Level sections */
+  details.level{
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  details.level[open] summary{ border-bottom: 1px solid var(--border); }
+  summary{
+    cursor:pointer; list-style:none;
+    display:flex; align-items:center; justify-content:space-between; gap: 12px;
+    padding: 14px 18px;
+    user-select:none;
+  }
+  summary::-webkit-details-marker{ display:none; }
+  .lvl-title{ display:flex; align-items:baseline; gap:10px; }
+  .lvl-num{
+    font-family:'JetBrains Mono', monospace; color: var(--amber); font-size: 12px;
+    border: 1px solid var(--amber-dim); border-radius: 5px; padding: 2px 6px;
+  }
+  .lvl-name{ font-family:'Oswald', sans-serif; font-size: 17px; text-transform: uppercase; letter-spacing: 0.02em; }
+  .lvl-badge{
+    font-family:'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim);
+    display:flex; align-items:center; gap:8px;
+  }
+  .lvl-ring{
+    width: 30px; height: 30px; border-radius: 50%;
+    display:grid; place-items:center;
+    background: conic-gradient(var(--amber) calc(var(--pct,0) * 1%), #262E38 0);
+  }
+  .lvl-ring-inner{ width: 22px; height: 22px; border-radius: 50%; background: var(--panel); }
+  .chevron{ transition: transform 0.2s ease; color: var(--text-faint); }
+  details[open] .chevron{ transform: rotate(90deg); }
+
+  .rows{ padding: 4px 10px 12px; }
+  .row{
+    display:grid;
+    grid-template-columns: 74px 1fr 148px 140px 1fr;
+    gap: 10px; align-items:center;
+    padding: 9px 8px; border-radius: 8px;
+    border-bottom: 1px solid #1E252D;
+  }
+  .row:last-child{ border-bottom: none; }
+  .row:nth-child(odd){ background: var(--row-alt); }
+  .row.hidden{ display:none; }
+  .m-id{ font-family:'JetBrains Mono', monospace; font-size: 12px; color: var(--amber); }
+  .m-title-wrap{ min-width: 0; }
+  .m-title{ font-size: 13.5px; color: var(--text); }
+  .yt-link{
+    font-family:'JetBrains Mono', monospace; font-size: 10.5px;
+    color: var(--text-faint); text-decoration: none;
+    border: 1px solid var(--border); border-radius: 5px;
+    padding: 1px 6px; margin-left: 6px; white-space: nowrap;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .yt-link:hover{ color: var(--amber); border-color: var(--amber-dim); }
+  .m-variation{ font-size: 11.5px; color: var(--text-dim); margin-top: 1px; }
+  select.status{
+    width:100%; font-size: 12px; font-family:'IBM Plex Sans',sans-serif;
+    background: #10151A; border: 1px solid var(--border); color: var(--text-dim);
+    border-radius: 7px; padding: 6px 7px;
+  }
+  select.status.st-1{ color: var(--text-faint); }
+  select.status.st-2{ color: var(--blue); border-color: #2B4A63; }
+  select.status.st-3{ color: var(--red); border-color: var(--red-dim); }
+  select.status.st-4{ color: var(--green); border-color: var(--green-dim); }
+  select.status.st-5{ color: var(--amber); border-color: var(--amber-dim); }
+  input.witness{
+    width:100%; font-size: 12px; font-family:'IBM Plex Sans',sans-serif;
+    background: #10151A; border: 1px solid var(--border); color: var(--text);
+    border-radius: 7px; padding: 6px 8px;
+  }
+  input.notes{
+    width:100%; font-size: 12px; font-family:'IBM Plex Sans',sans-serif;
+    background: #10151A; border: 1px solid var(--border); color: var(--text);
+    border-radius: 7px; padding: 6px 8px;
+  }
+  input.witness::placeholder, input.notes::placeholder{ color: var(--text-faint); }
+
+  .col-labels{
+    display:grid; grid-template-columns: 74px 1fr 148px 140px 1fr;
+    gap:10px; padding: 0 8px 6px; margin-top: 4px;
+  }
+  .col-labels span{ font-family:'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+
+  .prereq{
+    font-size: 11.5px; color: var(--text-faint); font-style: italic;
+    padding: 2px 8px 8px;
+  }
+
+  footer{ text-align:center; color: var(--text-faint); font-size: 11.5px; margin-top: 22px; font-family:'JetBrains Mono', monospace; }
+
+  @media (max-width: 720px){
+    .row{ grid-template-columns: 1fr; gap: 4px; padding: 12px 10px; }
+    .m-id{ order:0; }
+    .col-labels{ display:none; }
+    select.status, input.witness, input.notes{ margin-top: 4px; }
+  }
+
+  @media print{
+    body{ background:#fff; color:#000; padding:0; }
+    .toolbar{ display:none; }
+    .header{ border:none; background:none; }
+    .header::before{ display:none; }
+    h1, .lvl-name{ color:#000; }
+    details.level{ break-inside: avoid; border-color:#ccc; background:#fff; }
+    .row{ border-color:#eee; }
+    .row:nth-child(odd){ background:#f7f7f7; }
+    select.status, input.witness, input.notes{ background:#fff; border-color:#ccc; color:#000; }
+    .yt-link{ display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="eyebrow">RCHN Pilot Proficiency Program</div>
+    <h1>Maneuver Progression Log</h1>
+    <div class="sub">7 levels · <span id="totalCount">—</span> maneuvers · check off each as you demonstrate it in front of a witness</div>
+    <div class="credit">Based on the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener">RCHN Pilot Proficiency Program</a> — full credit to <a href="https://www.rchn.org" target="_blank" rel="noopener">rchn.org</a> for the original maneuver list. This tool just makes it easier to track.</div>
+    <div class="gauge">
+      <div class="gauge-top">
+        <span class="gauge-label">OVERALL PROGRESS</span>
+        <span class="gauge-num" id="gaugeNum">0 / 0 demonstrated</span>
+      </div>
+      <div class="gauge-track">
+        <div class="gauge-fill" id="gaugeFill" style="width:0%"></div>
+        <div class="gauge-ticks"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="Search maneuvers (e.g. tic-toc, autorotation, 3.5)…">
+    <select id="statusFilter">
+      <option value="">All statuses</option>
+      <option value="1">Not started</option>
+      <option value="2">Practicing</option>
+      <option value="3">Needs improvement</option>
+      <option value="4">Demonstrated</option>
+      <option value="5">Signed off</option>
+    </select>
+    <button class="btn" id="expandAll">Expand all</button>
+    <button class="btn" id="collapseAll">Collapse all</button>
+    <button class="btn" id="printBtn">Print</button>
+    <button class="btn" id="importBtn">Import progress</button>
+    <input type="file" id="importFile" accept="application/json">
+    <button class="btn primary" id="exportBtn">Export progress</button>
+    <button class="btn danger" id="resetBtn">Reset all</button>
+    <span id="saveIndicator" class="save-indicator"></span>
+  </div>
+
+  <div id="noStorageBanner" class="banner" style="display:none;">
+    Autosave isn't available in this preview window — your changes will disappear on refresh here. Download the file and open it directly in your browser (double-click it) for automatic saving, or use <strong>Export progress</strong> below before you close this tab.
+  </div>
+
+  <div id="levels"></div>
+
+  <footer>Progress is kept in this browser tab only — use Export to save a .json file after each session, and Import to pick up where you left off.<br>Maneuver list © <a href="https://www.rchn.org" target="_blank" rel="noopener" style="color:var(--amber);">RCHN</a> — see the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener" style="color:var(--amber);">original PDF</a> for the source program.</footer>
+</div>
+
+<script>
+const STATUS_LABELS = {
+  1: "Not started",
+  2: "Practicing",
+  3: "Needs improvement",
+  4: "Demonstrated",
+  5: "Signed off"
+};
+
+const DATA = [
+  { level:1, name:"Beginner", prereq:null, items:[
+    ["1.1","Take-Off","Tail-In"],
+    ["1.2","Stationary Hover","Tail-In"],
+    ["1.3","Lateral Hovering","Tail-In"],
+    ["1.4","Multi-Level Hover","Tail-In"],
+    ["1.5","45-Degree Side Hovering",""],
+    ["1.6","90-Degree Side Hovering","Side-In"],
+    ["1.7","Diagonal Hovering","Tail-In"],
+    ["1.8a","Constant-Heading Circle","CW"],
+    ["1.8b","Constant-Heading Circle","CCW"],
+  ]},
+  { level:2, name:"Basic Sport", prereq:"Complete Level 1", items:[
+    ["2.1a","Constant-Heading Figure 8","Forward"],
+    ["2.1b","Constant-Heading Figure 8","Reverse"],
+    ["2.2a","Circuits","CW"],
+    ["2.2b","Circuits","CCW"],
+    ["2.3a","Figure 8","Forward"],
+    ["2.3b","Figure 8","Reverse"],
+    ["2.4a","Side-In Landing","Left"],
+    ["2.4b","Side-In Landing","Right"],
+    ["2.5a","Pirouette","Left"],
+    ["2.5b","Pirouette","Right"],
+    ["2.6a","Stall Turn","Left-Side / Left-Piro"],
+    ["2.6b","Stall Turn","Left-Side / Right-Piro"],
+    ["2.6c","Stall Turn","Right-Side / Left-Piro"],
+    ["2.6d","Stall Turn","Right-Side / Right-Piro"],
+    ["2.7a","Inside Loop","Left"],
+    ["2.7b","Inside Loop","Right"],
+  ]},
+  { level:3, name:"Intermediate Sport", prereq:"Complete Levels 1–2", items:[
+    ["3.1","Stationary Hover","Nose-In"],
+    ["3.2","Take-Off","Nose-In"],
+    ["3.3","Constant-Heading Circle","Nose-In"],
+    ["3.4","Landing","Nose-In"],
+    ["3.5a","540-Degree Stall Turn","Left-Side / Left-Piro"],
+    ["3.5b","540-Degree Stall Turn","Left-Side / Right-Piro"],
+    ["3.5c","540-Degree Stall Turn","Right-Side / Left-Piro"],
+    ["3.5d","540-Degree Stall Turn","Right-Side / Right-Piro"],
+    ["3.6a","Flying Roll","Left-Side / Left-Roll"],
+    ["3.6b","Flying Roll","Left-Side / Right-Roll"],
+    ["3.6c","Flying Roll","Right-Side / Left-Roll"],
+    ["3.6d","Flying Roll","Right-Side / Right-Roll"],
+    ["3.7a","Loop with Pirouette at Top","Left-Side / Left-Piro"],
+    ["3.7b","Loop with Pirouette at Top","Left-Side / Right-Piro"],
+    ["3.7c","Loop with Pirouette at Top","Right-Side / Left-Piro"],
+    ["3.7d","Loop with Pirouette at Top","Right-Side / Right-Piro"],
+    ["3.8a","Immelmann","Left-Side / Left-Roll"],
+    ["3.8b","Immelmann","Left-Side / Right-Roll"],
+    ["3.8c","Immelmann","Right-Side / Left-Roll"],
+    ["3.8d","Immelmann","Right-Side / Right-Roll"],
+    ["3.9a","1/2 Cuban 8","Left-Side / Left-Roll"],
+    ["3.9b","1/2 Cuban 8","Left-Side / Right-Roll"],
+    ["3.9c","1/2 Cuban 8","Right-Side / Left-Roll"],
+    ["3.9d","1/2 Cuban 8","Right-Side / Right-Roll"],
+    ["3.10a","Flying Circle","CW"],
+    ["3.10b","Flying Circle","CCW"],
+    ["3.11a","Center-Heading Figure 8","CW"],
+    ["3.11b","Center-Heading Figure 8","CCW"],
+    ["3.12a","Autorotation Landing","Left"],
+    ["3.12b","Autorotation Landing","Right"],
+  ]},
+  { level:4, name:"Advanced Sport", prereq:"Complete Levels 1–3", items:[
+    ["4.1a","Sustained Inverted Flight","Left"],
+    ["4.1b","Sustained Inverted Flight","Right"],
+    ["4.2a","Sustained Inverted Hover","Nose-In"],
+    ["4.2b","Sustained Inverted Hover","Tail-In"],
+    ["4.2c","Sustained Inverted Hover","Nose-Left"],
+    ["4.2d","Sustained Inverted Hover","Nose-Right"],
+    ["4.3a","Inverted Pirouettes","CW"],
+    ["4.3b","Inverted Pirouettes","CCW"],
+    ["4.4a","Inverted Figure 8","Forwards"],
+    ["4.4b","Inverted Figure 8","Backwards"],
+    ["4.5a","Two Consecutive Stationary Rolls","Tail-in / Left"],
+    ["4.5b","Two Consecutive Stationary Rolls","Tail-in / Right"],
+    ["4.5c","Two Consecutive Stationary Rolls","Nose-in / Left"],
+    ["4.5d","Two Consecutive Stationary Rolls","Nose-in / Right"],
+    ["4.6a","180-Degree Autorotation","Left"],
+    ["4.6b","180-Degree Autorotation","Right"],
+    ["4.7a","Forward Flips","Tail-In"],
+    ["4.7b","Forward Flips","Nose-In"],
+    ["4.7c","Forward Flips","Nose-Left"],
+    ["4.7d","Forward Flips","Nose-Right"],
+    ["4.8a","Backward Flips","Tail-In"],
+    ["4.8b","Backward Flips","Nose-In"],
+    ["4.8c","Backward Flips","Nose-Left"],
+    ["4.8d","Backward Flips","Nose-Right"],
+    ["4.9a","Side Flips","Tail-in / Left"],
+    ["4.9b","Side Flips","Tail-in / Right"],
+    ["4.9c","Side Flips","Nose-in / Left"],
+    ["4.9d","Side Flips","Nose-in / Right"],
+    ["4.10a","Two Consecutive Stationary Flips","Tail-In / Forward"],
+    ["4.10b","Two Consecutive Stationary Flips","Tail-In / Backward"],
+    ["4.10c","Two Consecutive Stationary Flips","Nose-In / Forward"],
+    ["4.10d","Two Consecutive Stationary Flips","Nose-In / Backward"],
+  ]},
+  { level:5, name:"Basic 3D", prereq:"Complete Levels 1–4", items:[
+    ["5.1a","Sustained Backward Flight","Left"],
+    ["5.1b","Sustained Backward Flight","Right"],
+    ["5.2a","Backward Figure Eight","Forward"],
+    ["5.2b","Backward Figure Eight","Reverse"],
+    ["5.3a","Backward Inside Loop","Tail-In"],
+    ["5.3b","Backward Inside Loop","Nose-In"],
+    ["5.3c","Backward Inside Loop","Nose-Left"],
+    ["5.3d","Backward Inside Loop","Nose-Right"],
+    ["5.4a","Traveling Backward Rolls","Left-Side / Left-Roll"],
+    ["5.4b","Traveling Backward Rolls","Left-Side / Right-Roll"],
+    ["5.4c","Traveling Backward Rolls","Right-Side / Left-Roll"],
+    ["5.4d","Traveling Backward Rolls","Right-Side / Right-Roll"],
+    ["5.5a","Sustained Backwards Inverted Flight","Left"],
+    ["5.5b","Sustained Backwards Inverted Flight","Right"],
+    ["5.6a","Backward Inverted Figure Eight","Forward"],
+    ["5.6b","Backward Inverted Figure Eight","Reverse"],
+    ["5.7a","Inverted Autorotation","Left"],
+    ["5.7b","Inverted Autorotation","Right"],
+    ["5.8a","Knife Edge Pirouette","Left-Side / Left-Roll / Left-Piro"],
+    ["5.8b","Knife Edge Pirouette","Left-Side / Right-Roll / Right-Piro"],
+    ["5.8c","Knife Edge Pirouette","Right-Side / Left-Roll / Left-Piro"],
+    ["5.8d","Knife Edge Pirouette","Right-Side / Right-Roll / Right-Piro"],
+    ["5.9a","Death Spiral","Left-Roll / Forward"],
+    ["5.9b","Death Spiral","Left-Roll / Backward"],
+    ["5.9c","Death Spiral","Right-Roll / Forward"],
+    ["5.9d","Death Spiral","Right-Roll / Backward"],
+    ["5.10a","Tic-Tocs (Skids Out)","Nose-Up Elevator"],
+    ["5.10b","Tic-Tocs (Skids Out)","Nose-Down Elevator"],
+    ["5.10c","Tic-Tocs (Skids Out)","Nose-Left Aileron"],
+    ["5.10d","Tic-Tocs (Skids Out)","Nose-Right Aileron"],
+    ["5.11a","Vertical 8","Left-Side / Forward"],
+    ["5.11b","Vertical 8","Left-Side / Backward"],
+    ["5.11c","Vertical 8","Right-Side / Forward"],
+    ["5.11d","Vertical 8","Right-Side / Backward"],
+    ["5.12a","Tumbles","Left-Side / Forward"],
+    ["5.12b","Tumbles","Left-Side / Backward"],
+    ["5.12c","Tumbles","Right-Side / Forward"],
+    ["5.12d","Tumbles","Right-Side / Backward"],
+  ]},
+  { level:6, name:"Intermediate 3D", prereq:"Complete Levels 1–5", items:[
+    ["6.1a","Sideways Inside Loop","Tail-In / Left"],
+    ["6.1b","Sideways Inside Loop","Tail-In / Right"],
+    ["6.1c","Sideways Inside Loop","Nose-In / Left"],
+    ["6.1d","Sideways Inside Loop","Nose-In / Right"],
+    ["6.2a","Sideways Outside Loop","Tail-In / Left"],
+    ["6.2b","Sideways Outside Loop","Tail-In / Right"],
+    ["6.2c","Sideways Outside Loop","Nose-In / Left"],
+    ["6.2d","Sideways Outside Loop","Nose-In / Right"],
+    ["6.3a","Sideways Tumbles","Tail-In / Forward"],
+    ["6.3b","Sideways Tumbles","Tail-in / Backward"],
+    ["6.3c","Sideways Tumbles","Nose-In / Forward"],
+    ["6.3d","Sideways Tumbles","Nose-In / Backward"],
+    ["6.4a","Rainbows","Left-Side"],
+    ["6.4b","Rainbows","Right-Side"],
+    ["6.5a","Tic Tocs (Skids In)","Nose-Up Elevator"],
+    ["6.5b","Tic Tocs (Skids In)","Nose-Down Elevator"],
+    ["6.5c","Tic Tocs (Skids In)","Nose-Left Aileron"],
+    ["6.5d","Tic Tocs (Skids In)","Nose-Right Aileron"],
+    ["6.6a","4-Point Tic Tocs (Skids Out)","CW"],
+    ["6.6b","4-Point Tic Tocs (Skids Out)","CCW"],
+    ["6.7a","Half-Pirouetting Flips","Left"],
+    ["6.7b","Half-Pirouetting Flips","Right"],
+    ["6.8a","Mobius","Left"],
+    ["6.8b","Mobius","Right"],
+    ["6.9a","Forward Rolling Circles","CW"],
+    ["6.9b","Forward Rolling Circles","CCW"],
+  ]},
+  { level:7, name:"Advanced 3D", prereq:"Complete Levels 1–6", items:[
+    ["7.1a","Pirouetting Inside Loop","Left-Side / Left-Piro"],
+    ["7.1b","Pirouetting Inside Loop","Left-Side / Right-Piro"],
+    ["7.1c","Pirouetting Inside Loop","Right-Side / Left-Piro"],
+    ["7.1d","Pirouetting Inside Loop","Right-Side / Right-Piro"],
+    ["7.2a","Pirouetting Outside Loop","Left-Side / Left-Piro"],
+    ["7.2b","Pirouetting Outside Loop","Left-Side / Right-Piro"],
+    ["7.2c","Pirouetting Outside Loop","Right-Side / Left-Piro"],
+    ["7.2d","Pirouetting Outside Loop","Right-Side / Right-Piro"],
+    ["7.3a","Pirouetting Figure 8","Forward / Left-Piro"],
+    ["7.3b","Pirouetting Figure 8","Forward / Right-Piro"],
+    ["7.3c","Pirouetting Figure 8","Reverse / Left-Piro"],
+    ["7.3d","Pirouetting Figure 8","Reverse / Right-Piro"],
+    ["7.4a","Inverted Pirouetting Figure 8","Forward / Left-Piro"],
+    ["7.4b","Inverted Pirouetting Figure 8","Forward / Right-Piro"],
+    ["7.4c","Inverted Pirouetting Figure 8","Reverse / Left-Piro"],
+    ["7.4d","Inverted Pirouetting Figure 8","Reverse / Right-Piro"],
+    ["7.5a","Double-Pirouetting Flips","Left"],
+    ["7.5b","Double-Pirouetting Flips","Right"],
+    ["7.6a","4-Point Tic Tocs (Skids In)","CW"],
+    ["7.6b","4-Point Tic Tocs (Skids In)","CCW"],
+    ["7.7a","Traveling Double-Pirouetting Flips","Left-Piro / CW"],
+    ["7.7b","Traveling Double-Pirouetting Flips","Left-Piro / CCW"],
+    ["7.7c","Traveling Double-Pirouetting Flips","Right-Piro / CW"],
+    ["7.7d","Traveling Double-Pirouetting Flips","Right-Piro / CCW"],
+    ["7.8a","Pirouetting Autorotation","Left"],
+    ["7.8b","Pirouetting Autorotation","Right"],
+    ["7.9a","Pirouetting Tic Tocs","Left"],
+    ["7.9b","Pirouetting Tic Tocs","Right"],
+  ]},
+];
+
+const STORAGE_KEY = 'rchn-pilot-proficiency-progress-v1';
+
+function storageAvailable(){
+  try{
+    const t = '__test__';
+    window.localStorage.setItem(t, t);
+    window.localStorage.removeItem(t);
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+const CAN_AUTOSAVE = storageAvailable();
+
+const state = {}; // id -> {status, witness, notes}
+let totalItems = 0;
+DATA.forEach(lvl => lvl.items.forEach(it => {
+  state[it[0]] = { status: 1, witness: "", notes: "" };
+  totalItems++;
+}));
+document.getElementById('totalCount').textContent = totalItems;
+
+let savedState = null;
+if (CAN_AUTOSAVE){
+  try{
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (raw){
+      const parsed = JSON.parse(raw);
+      savedState = parsed.state || parsed;
+    }
+  }catch(e){ /* ignore corrupt storage */ }
+}
+if (savedState){
+  Object.keys(savedState).forEach(id => {
+    if (state[id]) state[id] = Object.assign(state[id], savedState[id]);
+  });
+}
+
+let autosaveTimer = null;
+function autosave(){
+  if (!CAN_AUTOSAVE) return;
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(() => {
+    try{
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ savedAt: new Date().toISOString(), state }));
+      flashSavedIndicator();
+    }catch(e){ /* storage full or blocked — silently skip, Export still works */ }
+  }, 300);
+}
+function flashSavedIndicator(){
+  const el = document.getElementById('saveIndicator');
+  if (!el) return;
+  el.textContent = 'Saved ' + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 700);
+}
+
+const levelsEl = document.getElementById('levels');
+
+function statusOptionsHTML(current){
+  return Object.entries(STATUS_LABELS).map(([k,label]) =>
+    `<option value="${k}" ${String(current)===k ? "selected":""}>${label}</option>`
+  ).join('');
+}
+
+function renderLevel(lvl){
+  const details = document.createElement('details');
+  details.className = 'level';
+  details.dataset.level = lvl.level;
+  details.open = lvl.level === 1;
+
+  const summary = document.createElement('summary');
+  summary.innerHTML = `
+    <div class="lvl-title">
+      <span class="chevron">▶</span>
+      <span class="lvl-num">L${lvl.level}</span>
+      <span class="lvl-name">${lvl.name}</span>
+    </div>
+    <div class="lvl-badge">
+      <span class="lvl-count-text">0 / ${lvl.items.length}</span>
+      <span class="lvl-ring" style="--pct:0"><span class="lvl-ring-inner"></span></span>
+    </div>
+  `;
+  details.appendChild(summary);
+
+  const rowsWrap = document.createElement('div');
+  rowsWrap.className = 'rows';
+
+  if (lvl.prereq){
+    const p = document.createElement('div');
+    p.className = 'prereq';
+    p.textContent = `Prerequisite: ${lvl.prereq}`;
+    rowsWrap.appendChild(p);
+  }
+
+  const colLabels = document.createElement('div');
+  colLabels.className = 'col-labels';
+  colLabels.innerHTML = `<span>ID</span><span>Maneuver</span><span>Status</span><span>Witness</span><span>Notes</span>`;
+  rowsWrap.appendChild(colLabels);
+
+  lvl.items.forEach(([id, title, variation]) => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.dataset.id = id;
+    row.dataset.search = (id + " " + title + " " + variation).toLowerCase();
+
+    const s = state[id];
+    const searchQuery = encodeURIComponent(`RC helicopter ${title}${variation ? " " + variation : ""} tutorial`);
+    const ytLink = `https://www.youtube.com/results?search_query=${searchQuery}`;
+    row.innerHTML = `
+      <div class="m-id">${id}</div>
+      <div class="m-title-wrap">
+        <div class="m-title">${title} <a class="yt-link" href="${ytLink}" target="_blank" rel="noopener">▶ search</a></div>
+        ${variation ? `<div class="m-variation">${variation}</div>` : ""}
+      </div>
+      <select class="status st-${s.status}" data-id="${id}">${statusOptionsHTML(s.status)}</select>
+      <input class="witness" data-id="${id}" type="text" placeholder="Name" value="${(s.witness||"").replace(/"/g,'&quot;')}">
+      <input class="notes" data-id="${id}" type="text" placeholder="Notes…" value="${(s.notes||"").replace(/"/g,'&quot;')}">
+    `;
+    rowsWrap.appendChild(row);
+  });
+
+  details.appendChild(rowsWrap);
+  levelsEl.appendChild(details);
+}
+
+DATA.forEach(renderLevel);
+
+function updateProgress(){
+  let demoTotal = 0;
+  DATA.forEach(lvl => {
+    let demoLvl = 0;
+    lvl.items.forEach(([id]) => {
+      if (state[id].status == 4 || state[id].status == 5) demoLvl++;
+    });
+    demoTotal += demoLvl;
+    const details = levelsEl.querySelector(`details[data-level="${lvl.level}"]`);
+    const pct = Math.round((demoLvl / lvl.items.length) * 100);
+    details.querySelector('.lvl-count-text').textContent = `${demoLvl} / ${lvl.items.length}`;
+    details.querySelector('.lvl-ring').style.setProperty('--pct', pct);
+  });
+  const overallPct = Math.round((demoTotal / totalItems) * 100);
+  document.getElementById('gaugeFill').style.width = overallPct + '%';
+  document.getElementById('gaugeNum').textContent = `${demoTotal} / ${totalItems} demonstrated`;
+}
+updateProgress();
+
+if (!CAN_AUTOSAVE){
+  document.getElementById('noStorageBanner').style.display = 'block';
+  document.getElementById('saveIndicator').textContent = 'Autosave off';
+} else if (savedState){
+  document.getElementById('saveIndicator').textContent = 'Loaded saved progress';
+} else {
+  document.getElementById('saveIndicator').textContent = 'Not saved yet';
+}
+
+levelsEl.addEventListener('change', (e) => {
+  const id = e.target.dataset.id;
+  if (!id) return;
+  if (e.target.classList.contains('status')){
+    state[id].status = e.target.value;
+    e.target.className = 'status st-' + e.target.value;
+    updateProgress();
+  } else if (e.target.classList.contains('witness')){
+    state[id].witness = e.target.value;
+  } else if (e.target.classList.contains('notes')){
+    state[id].notes = e.target.value;
+  }
+  autosave();
+});
+levelsEl.addEventListener('input', (e) => {
+  const id = e.target.dataset.id;
+  if (!id) return;
+  if (e.target.classList.contains('witness')) state[id].witness = e.target.value;
+  if (e.target.classList.contains('notes')) state[id].notes = e.target.value;
+  autosave();
+});
+
+// Search + filter
+function applyFilters(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const statusFilter = document.getElementById('statusFilter').value;
+  document.querySelectorAll('.row').forEach(row => {
+    const id = row.dataset.id;
+    const matchesText = !q || row.dataset.search.includes(q);
+    const matchesStatus = !statusFilter || String(state[id].status) === statusFilter;
+    const show = matchesText && matchesStatus;
+    row.classList.toggle('hidden', !show);
+    if (show && (q || statusFilter)){
+      row.closest('details').open = true;
+    }
+  });
+}
+document.getElementById('search').addEventListener('input', applyFilters);
+document.getElementById('statusFilter').addEventListener('change', applyFilters);
+
+// Expand / collapse
+document.getElementById('expandAll').addEventListener('click', () => {
+  document.querySelectorAll('details.level').forEach(d => d.open = true);
+});
+document.getElementById('collapseAll').addEventListener('click', () => {
+  document.querySelectorAll('details.level').forEach(d => d.open = false);
+});
+
+// Print
+document.getElementById('printBtn').addEventListener('click', () => {
+  document.querySelectorAll('details.level').forEach(d => d.open = true);
+  window.print();
+});
+
+// Export
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const payload = { exportedAt: new Date().toISOString(), state };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `pilot-proficiency-progress-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Reset
+document.getElementById('resetBtn').addEventListener('click', () => {
+  const sure = confirm('Reset ALL progress on this device? This clears every status, witness, and note. This cannot be undone — export a backup first if you want one.');
+  if (!sure) return;
+  Object.keys(state).forEach(id => {
+    state[id] = { status: 1, witness: "", notes: "" };
+  });
+  document.querySelectorAll('.row').forEach(row => {
+    const id = row.dataset.id;
+    const sel = row.querySelector('.status');
+    sel.value = 1;
+    sel.className = 'status st-1';
+    row.querySelector('.witness').value = "";
+    row.querySelector('.notes').value = "";
+  });
+  updateProgress();
+  if (CAN_AUTOSAVE){
+    try{ window.localStorage.removeItem(STORAGE_KEY); }catch(e){}
+    document.getElementById('saveIndicator').textContent = 'Reset';
+  }
+});
+document.getElementById('importBtn').addEventListener('click', () => {
+  document.getElementById('importFile').click();
+});
+document.getElementById('importFile').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    try{
+      const payload = JSON.parse(evt.target.result);
+      const incoming = payload.state || payload;
+      Object.keys(incoming).forEach(id => {
+        if (state[id]){
+          state[id] = incoming[id];
+          const row = document.querySelector(`.row[data-id="${CSS.escape(id)}"]`);
+          if (row){
+            const sel = row.querySelector('.status');
+            sel.value = state[id].status;
+            sel.className = 'status st-' + state[id].status;
+            row.querySelector('.witness').value = state[id].witness || "";
+            row.querySelector('.notes').value = state[id].notes || "";
+          }
+        }
+      });
+      updateProgress();
+      alert('Progress imported.');
+    }catch(err){
+      alert('Could not read that file — make sure it is a progress JSON exported from this tool.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+</script>
+</body>
+</html>
