@@ -226,9 +226,6 @@
   .res-grid{
     display:grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
   }
-  .res-grid-4{
-    display:grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
-  }
   .res-col{ display:flex; flex-direction:column; gap: 7px; }
   .res-heading{
     font-family:'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing:0.08em;
@@ -246,7 +243,7 @@
     border-top: 1px solid var(--border); padding-top: 12px;
   }
   @media (max-width: 720px){
-    .res-grid, .res-grid-4{ grid-template-columns: 1fr; gap: 16px; }
+    .res-grid{ grid-template-columns: 1fr; gap: 16px; }
   }
 
   footer{ text-align:center; color: var(--text-faint); font-size: 11.5px; margin-top: 22px; font-family:'JetBrains Mono', monospace; }
@@ -325,18 +322,13 @@
       </div>
     </summary>
     <div class="rows" style="padding: 6px 18px 18px;">
-      <div class="res-grid-4">
+      <div class="res-grid">
         <div class="res-col">
           <div class="res-heading">Micro / Mini Trainers</div>
           <a href="https://www.helidirect.com/collections/goosky-s1-helicopter-kits" target="_blank" rel="noopener">Goosky S1</a>
           <a href="https://www.helidirect.com/collections/goosky-helicopter-kit" target="_blank" rel="noopener">Goosky S2</a>
           <a href="https://www.omphobby.com/OMPHOBBY-M1-V3-PRO-3D-RC-Helicopter-p4692196.html" target="_blank" rel="noopener">OMP M1</a>
           <a href="https://www.omphobby.net/OMPHOBBY-M2-EVO-MK2-RTF-RC-Helicopter-p4471686.html" target="_blank" rel="noopener">OMP M2</a>
-        </div>
-        <div class="res-col">
-          <div class="res-heading">First Sport CP Helis</div>
-          <a href="https://www.horizonhobby.com/brand/blade" target="_blank" rel="noopener">Blade 230S</a>
-          <a href="https://align-rc.com" target="_blank" rel="noopener">Align T-Rex 450</a>
         </div>
         <div class="res-col">
           <div class="res-heading">Radio Transmitters</div>
@@ -375,7 +367,6 @@
         <div class="res-col">
           <div class="res-heading">Learning &amp; YouTube</div>
           <a href="https://www.youtube.com/@AliShanMao" target="_blank" rel="noopener">AliShanMao</a>
-          <a href="https://www.youtube.com/@SmackTalkRC" target="_blank" rel="noopener">SmackTalk RC</a>
           <a href="https://www.youtube.com/channel/UC5TJMBgOdnhfEjWIG-0hRow" target="_blank" rel="noopener">RC Helicopter Richard</a>
           <a href="https://www.youtube.com/@BenFliesRC" target="_blank" rel="noopener">BenFliesRC</a>
         </div>
