@@ -28,11 +28,40 @@
     --red: #C1584B;
     --red-dim: #4A2D28;
     --blue: #5B8FBF;
+    --input-bg: #10151A;
+    --track-bg: #0F1317;
+    --row-border: #1E252D;
+    --ring-empty: #262E38;
+    --bg-glow: #1B2129;
+    --banner-text: #F3D9D5;
+  }
+  html[data-theme="light"]{
+    --bg: #F6F2EA;
+    --panel: #FFFFFF;
+    --panel-2: #FBF8F2;
+    --row-alt: #F1ECE1;
+    --border: #DDD5C4;
+    --text: #23201B;
+    --text-dim: #5B564C;
+    --text-faint: #8B8577;
+    --amber: #B8792A;
+    --amber-dim: #E8CFA0;
+    --green: #2F7D53;
+    --green-dim: #D9EFE1;
+    --red: #B03B2E;
+    --red-dim: #F6DAD4;
+    --blue: #3E6E96;
+    --input-bg: #FFFFFF;
+    --track-bg: #EDE7D8;
+    --row-border: #E7E1D2;
+    --ring-empty: #E3DCC9;
+    --bg-glow: #FFFFFF;
+    --banner-text: #6B2620;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background: radial-gradient(1200px 600px at 50% -10%, #1B2129 0%, var(--bg) 55%);
+    background: radial-gradient(1200px 600px at 50% -10%, var(--bg-glow) 0%, var(--bg) 55%);
     color: var(--text);
     font-family: 'IBM Plex Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -85,7 +114,7 @@
   .gauge-num{ font-family:'JetBrains Mono', monospace; font-size: 13px; color: var(--amber); }
   .gauge-track{
     position: relative; height: 22px; border-radius: 4px;
-    background: #0F1317; border: 1px solid var(--border);
+    background: var(--track-bg); border: 1px solid var(--border);
     overflow: hidden;
   }
   .gauge-fill{
@@ -110,7 +139,7 @@
     backdrop-filter: blur(6px);
   }
   .toolbar input[type="text"], .toolbar select{
-    background: #10151A; border: 1px solid var(--border); color: var(--text);
+    background: var(--input-bg); border: 1px solid var(--border); color: var(--text);
     border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family:'IBM Plex Sans',sans-serif;
   }
   .toolbar input[type="text"]{ flex: 1 1 200px; min-width: 140px; }
@@ -133,7 +162,7 @@
   .save-indicator.flash{ color: var(--green); background: var(--green-dim); }
   .banner{
     background: var(--red-dim); border: 1px solid var(--red);
-    color: #F3D9D5; font-size: 12.5px; line-height: 1.5;
+    color: var(--banner-text); font-size: 12.5px; line-height: 1.5;
     padding: 12px 16px; border-radius: 10px; margin-bottom: 14px;
   }
 
@@ -166,7 +195,7 @@
   .lvl-ring{
     width: 30px; height: 30px; border-radius: 50%;
     display:grid; place-items:center;
-    background: conic-gradient(var(--amber) calc(var(--pct,0) * 1%), #262E38 0);
+    background: conic-gradient(var(--amber) calc(var(--pct,0) * 1%), var(--ring-empty) 0);
   }
   .lvl-ring-inner{ width: 22px; height: 22px; border-radius: 50%; background: var(--panel); }
   .chevron{ transition: transform 0.2s ease; color: var(--text-faint); }
@@ -178,7 +207,7 @@
     grid-template-columns: 74px 1fr 148px 140px 1fr;
     gap: 10px; align-items:center;
     padding: 9px 8px; border-radius: 8px;
-    border-bottom: 1px solid #1E252D;
+    border-bottom: 1px solid var(--row-border);
   }
   .row:last-child{ border-bottom: none; }
   .row:nth-child(odd){ background: var(--row-alt); }
@@ -197,7 +226,7 @@
   .m-variation{ font-size: 11.5px; color: var(--text-dim); margin-top: 1px; }
   select.status{
     width:100%; font-size: 12px; font-family:'IBM Plex Sans',sans-serif;
-    background: #10151A; border: 1px solid var(--border); color: var(--text-dim);
+    background: var(--input-bg); border: 1px solid var(--border); color: var(--text-dim);
     border-radius: 7px; padding: 6px 7px;
   }
   select.status.st-1{ color: var(--text-faint); }
@@ -207,12 +236,12 @@
   select.status.st-5{ color: var(--amber); border-color: var(--amber-dim); }
   input.witness{
     width:100%; font-size: 12px; font-family:'IBM Plex Sans',sans-serif;
-    background: #10151A; border: 1px solid var(--border); color: var(--text);
+    background: var(--input-bg); border: 1px solid var(--border); color: var(--text);
     border-radius: 7px; padding: 6px 8px;
   }
   input.notes{
     width:100%; font-size: 12px; font-family:'IBM Plex Sans',sans-serif;
-    background: #10151A; border: 1px solid var(--border); color: var(--text);
+    background: var(--input-bg); border: 1px solid var(--border); color: var(--text);
     border-radius: 7px; padding: 6px 8px;
   }
   input.witness::placeholder, input.notes::placeholder{ color: var(--text-faint); }
@@ -314,6 +343,7 @@
     <input type="file" id="importFile" accept="application/json">
     <button class="btn primary" id="exportBtn">Export progress</button>
     <button class="btn danger" id="resetBtn">Reset all</button>
+    <button class="btn" id="themeToggle">☀️ Light</button>
     <span id="saveIndicator" class="save-indicator"></span>
   </div>
 
@@ -658,6 +688,23 @@ function storageAvailable(){
   }
 }
 const CAN_AUTOSAVE = storageAvailable();
+
+const THEME_KEY = 'rchn-pilot-proficiency-theme';
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = theme === 'light' ? '🌙 Dark' : '☀️ Light';
+}
+let savedTheme = 'dark';
+try{
+  savedTheme = window.localStorage.getItem(THEME_KEY) || 'dark';
+}catch(e){ /* storage unavailable — default to dark */ }
+applyTheme(savedTheme);
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  applyTheme(next);
+  try{ window.localStorage.setItem(THEME_KEY, next); }catch(e){ /* theme just won't persist */ }
+});
 
 const state = {}; // id -> {status, witness, notes}
 let totalItems = 0;
