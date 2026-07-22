@@ -91,11 +91,6 @@
     border-radius: 10px; border: 1px solid var(--border);
     margin-bottom: 4px;
   }
-  .eyebrow{
-    font-family:'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--amber); font-weight: 500;
-  }
   h1{
     font-family:'Oswald', sans-serif;
     font-weight: 600; letter-spacing: 0.01em;
@@ -143,6 +138,9 @@
     border-radius: 8px; padding: 8px 10px; font-size: 13px; font-family:'IBM Plex Sans',sans-serif;
   }
   .toolbar input[type="text"]{ flex: 1 1 200px; min-width: 140px; }
+  .theme-toggle-fixed{
+    position: fixed; top: 16px; right: 16px; z-index: 50;
+  }
   .btn{
     font-family:'IBM Plex Sans',sans-serif;
     background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
@@ -310,6 +308,7 @@
   @media print{
     body{ background:#fff; color:#000; padding:0; }
     .toolbar{ display:none; }
+    .theme-toggle-fixed{ display:none; }
     .hero-img{ display:none; }
     .header{ border:none; background:none; }
     .header::before{ display:none; }
@@ -324,15 +323,13 @@
 </style>
 </head>
 <body>
+<button class="btn theme-toggle-fixed" id="themeToggle">☀️ Light</button>
 <div class="wrap">
 
   <div class="header">
     <img class="hero-img" src="hero.jpg" alt="A young boy and girl smiling while flying colorful RC helicopters at sunset">
-    <div class="eyebrow">RCHN Pilot Proficiency Program</div>
     <h1>Learn to Fly RC Helicopters</h1>
     <div class="sub">A free guide and progress tracker for the RCHN Pilot Proficiency Program — from your first hover to full 3D aerobatics.</div>
-    <div class="credit">Based on the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener">RCHN Pilot Proficiency Program</a> — full credit to <a href="https://www.rchn.org" target="_blank" rel="noopener">rchn.org</a> for the original maneuver list. This tool just makes it easier to track.</div>
-    <div class="credit">Progress is kept in this browser tab only — use Export to save a .json file after each session, and Import to pick up where you left off.<br>Maneuver list © <a href="https://www.rchn.org" target="_blank" rel="noopener">RCHN</a> — see the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener">original PDF</a> for the source program.</div>
     <div class="gauge">
       <div class="gauge-top">
         <span class="gauge-label">OVERALL PROGRESS</span>
@@ -362,7 +359,6 @@
     <input type="file" id="importFile" accept="application/json">
     <button class="btn primary" id="exportBtn">Export progress</button>
     <button class="btn danger" id="resetBtn">Reset all</button>
-    <button class="btn" id="themeToggle">☀️ Light</button>
     <span id="saveIndicator" class="save-indicator"></span>
   </div>
 
@@ -484,6 +480,8 @@
       </div>
     </summary>
     <div class="sub" style="padding: 0 18px 8px;">7 levels · <span id="totalCount">—</span> maneuvers · check off each as you demonstrate it in front of a witness</div>
+    <div class="credit" style="padding: 0 18px;">Based on the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener">RCHN Pilot Proficiency Program</a> — full credit to <a href="https://www.rchn.org" target="_blank" rel="noopener">rchn.org</a> for the original maneuver list. This tool just makes it easier to track.</div>
+    <div class="credit" style="padding: 0 18px;">Progress is kept in this browser tab only — use Export to save a .json file after each session, and Import to pick up where you left off.<br>Maneuver list © <a href="https://www.rchn.org" target="_blank" rel="noopener">RCHN</a> — see the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener">original PDF</a> for the source program.</div>
     <div id="levels" style="padding: 6px 18px 18px;"></div>
   </details>
 
