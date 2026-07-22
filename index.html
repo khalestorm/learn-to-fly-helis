@@ -7,6 +7,15 @@
 <meta property="og:title" content="Learn to Fly RC Helicopters — Maneuver Tracker">
 <meta property="og:description" content="A free guide and progress tracker for the RCHN Pilot Proficiency Program's 179 RC helicopter maneuvers.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://www.learntoflyhelis.com/">
+<meta property="og:image" content="https://www.learntoflyhelis.com/hero.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Learn to Fly RC Helicopters — Maneuver Tracker">
+<meta name="twitter:description" content="A free guide and progress tracker for the RCHN Pilot Proficiency Program's 179 RC helicopter maneuvers.">
+<meta name="twitter:image" content="https://www.learntoflyhelis.com/hero.jpg">
+<meta name="theme-color" content="#12161B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F6F2EA" media="(prefers-color-scheme: light)">
+<link rel="canonical" href="https://www.learntoflyhelis.com/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='68' font-size='68' text-anchor='middle'%3E%F0%9F%9A%81%3C/text%3E%3C/svg%3E">
 <title>Learn to Fly RC Helicopters — Maneuver Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -140,6 +149,7 @@
   .toolbar input[type="text"]{ flex: 1 1 200px; min-width: 140px; }
   .theme-toggle-fixed{
     position: fixed; top: 16px; right: 16px; z-index: 50;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
   }
   .btn{
     font-family:'IBM Plex Sans',sans-serif;
@@ -255,11 +265,43 @@
     padding: 2px 8px 8px;
   }
 
+  .flight-labels{
+    display:grid; grid-template-columns: 130px 100px 90px 1fr 30px;
+    gap:10px; padding: 12px 8px 6px; margin-top: 4px;
+  }
+  .flight-labels span{ font-family:'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+  .flight-row{
+    display:grid;
+    grid-template-columns: 130px 100px 90px 1fr 30px;
+    gap: 10px; align-items:center;
+    padding: 7px 8px; border-radius: 8px;
+    border-bottom: 1px solid var(--row-border);
+  }
+  .flight-row:last-child{ border-bottom: none; }
+  .flight-row:nth-child(odd){ background: var(--row-alt); }
+  .flight-row input{
+    width:100%; font-size: 13.5px; font-family:'IBM Plex Sans',sans-serif;
+    background: var(--input-bg); border: 1px solid var(--border); color: var(--text);
+    border-radius: 7px; padding: 6px 8px;
+  }
+  .flight-row input::placeholder{ color: var(--text-faint); }
+  .flight-del{
+    background: none; border: 1px solid var(--border); color: var(--text-faint);
+    border-radius: 6px; width: 26px; height: 26px; cursor: pointer; font-size: 14px; line-height:1;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .flight-del:hover{ color: var(--red); border-color: var(--red-dim); }
+  .flight-empty{ font-size: 13px; color: var(--text-faint); font-style: italic; padding: 10px 8px; }
+  @media (max-width: 720px){
+    .flight-labels{ display:none; }
+    .flight-row{ grid-template-columns: 1fr 1fr; gap: 6px; }
+  }
+
   .res-grid{
     display:grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
   }
   .res-grid-4{
-    display:grid; grid-template-columns: repeat(4, 1fr); gap: 22px;
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 22px;
   }
   .res-col{ display:flex; flex-direction:column; gap: 7px; }
   .res-heading{
@@ -276,9 +318,6 @@
   .res-note{
     font-size: 13px; color: var(--text-faint); margin-top: 16px;
     border-top: 1px solid var(--border); padding-top: 12px;
-  }
-  @media (max-width: 900px){
-    .res-grid-4{ grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 720px){
     .res-grid{ grid-template-columns: 1fr; gap: 16px; }
@@ -321,6 +360,7 @@
     .header::before{ display:none; }
     h1, .lvl-name{ color:#000; }
     .donate{ display:none; }
+    #startHereSection, #gettingStartedSection, #firstFlightSection, #troubleshootingSection, #flightLogSection, #resourcesSection{ display:none; }
     details.level{ break-inside: avoid; border-color:#ccc; background:#fff; }
     .row{ border-color:#eee; }
     .row:nth-child(odd){ background:#f7f7f7; }
@@ -385,7 +425,7 @@
         <strong>1. Fly a simulator first.</strong> Hours in a free/cheap sim (see Simulators below) build stick muscle memory without the cost of crashes. Most pilots recommend at least several hours of sim hovering before touching a real heli.<br><br>
         <strong>2. Learn a few key terms.</strong> <em>BNF</em> (Bind-N-Fly — needs your own radio), <em>RTF</em> (Ready-To-Fly — radio included), <em>CP</em> (Collective Pitch — blades can go negative pitch, required for 3D), <em>flybarless</em> (electronic stabilization, standard on modern micros), <em>ELRS</em> (ExpressLRS, a popular open-source radio link protocol), <em>expo/rates</em> (how sensitive your sticks feel).<br><br>
         <strong>3. Pick your first heli and radio.</strong> See Getting Started below for beginner-friendly micro helis (Goosky S1/S2, OMP M1/M2) and radios (RadioMaster Zorro/Boxer).<br><br>
-        <strong>4. Find a local club or an experienced buddy.</strong> Flying near someone who already knows the hobby is the fastest way to avoid bad habits and crashes — try the <a href="https://www.modelaircraft.org/club-finder" target="_blank" rel="noopener">AMA Club Finder</a> or ask around on <a href="https://www.reddit.com/r/RCHeli/" target="_blank" rel="noopener">r/RCHeli</a> or <a href="https://www.helifreak.com" target="_blank" rel="noopener">HeliFreak</a>.<br><br>
+        <strong>4. Find a local club or an experienced buddy.</strong> Flying near someone who already knows the hobby is the fastest way to avoid bad habits and crashes — try the <a href="https://www.modelaircraft.org/club-finder" target="_blank" rel="noopener">AMA Club Finder</a> or ask around on <a href="https://www.reddit.com/r/RCHeli/" target="_blank" rel="noopener">r/RCHeli</a> or <a href="https://www.helifreak.com" target="_blank" rel="noopener">HeliFreak</a>. Most clubs require <a href="https://www.modelaircraft.org/membership" target="_blank" rel="noopener">AMA membership</a>, which is worth getting anyway — it includes liability insurance that covers you if your heli damages property or injures someone.<br><br>
         <strong>5. A few safety basics before your first flight:</strong> keep hands and faces clear of spinning blades, never charge or store LiPo batteries unattended (use a fireproof bag/box), always fly with a spotter if you're near other people, and set up a throttle-cut/failsafe on your radio before you fly.<br><br>
         <strong>6. Set expectations.</strong> A first BNF micro heli + battery + charger runs roughly $150–400 (add a radio if it's not RTF); most micros fly 5–10 minutes per charge. Comfortable hovering usually takes a few weeks of regular sim + real practice — that's normal, not a sign you're doing it wrong.<br><br>
         <strong>You will crash — that's normal.</strong> Once your gear is bound and set up (see First Flight below), work through the Level 1 checklist and track your progress as you go.
@@ -431,8 +471,14 @@
           <a href="https://www.accurc.com" target="_blank" rel="noopener">AccuRC (largest heli inventory)</a>
           <a href="https://www.helidirect.com/products/next-cgm-rc-heli-flight-simulator-download-version" target="_blank" rel="noopener">neXt by CGM (Win/Mac/Linux)</a>
         </div>
+        <div class="res-col">
+          <div class="res-heading">Spare Parts / Crash Kit</div>
+          <a href="https://www.helidirect.com/collections/goosky-s1-helicopter-parts" target="_blank" rel="noopener">Goosky S1 spare parts</a>
+          <a href="https://www.helidirect.com/collections/goosky-s2-helicopter-parts" target="_blank" rel="noopener">Goosky S2 spare parts</a>
+          <a href="https://www.omphobby.net" target="_blank" rel="noopener">OMP M1/M2 spare parts</a>
+        </div>
       </div>
-      <div class="res-note">Sim time is the highest-leverage thing a beginner can do — hours in a simulator translate directly to fewer crashes and faster progress once you're flying for real. Gear recommendations shift with the market; check HeliFreak and current-year buying guides before purchasing, since specific models come and go.</div>
+      <div class="res-note">Sim time is the highest-leverage thing a beginner can do — hours in a simulator translate directly to fewer crashes and faster progress once you're flying for real. Buy a spare set of main and tail blades (and a canopy) with your first heli — you will crash while learning, and having parts on hand means a broken blade ends a flight, not your whole session. Gear recommendations shift with the market; check HeliFreak and current-year buying guides before purchasing, since specific models come and go.</div>
     </div>
   </details>
 
@@ -452,6 +498,42 @@
         <strong>5. Level the swashplate and check sub-trim.</strong> Follow your heli's manual for swash-leveling and default sub-trim/servo settings — most micros ship with a tool or app for this.<br><br>
         <strong>6. First spool-up, then first hover.</strong> Do a low-throttle spool-up test on the ground, away from your body, and confirm the tail holds heading. For your first real hover, fly low over soft grass or a mat, stay centered, and be ready to cut throttle at any moment.
       </div>
+    </div>
+  </details>
+
+  <details class="level" id="troubleshootingSection">
+    <summary>
+      <div class="lvl-title">
+        <span class="chevron">▶</span>
+        <span class="lvl-name">Troubleshooting: Common Beginner Issues</span>
+      </div>
+    </summary>
+    <div class="rows" style="padding: 6px 18px 18px;">
+      <div class="res-note" style="margin-top:0; border-top:none; padding-top:0;">
+        <strong>Heli drifts sideways or won't hold a spot.</strong> Usually stick input (yours), not the heli — expo/rates can help, but drift is mostly cured by sim time and small, gentle corrections instead of big stick movements. If it drifts the same direction every time, check trim.<br><br>
+        <strong>Tail wags or "hunts" back and forth.</strong> Often a gyro/tail gain setting that's too high or too low, or a loose tail linkage/tail motor mount — check for slop in the tail linkage first, then try adjusting tail gain per your heli's manual.<br><br>
+        <strong>Heli vibrates a lot.</strong> Check for damaged, unbalanced, or improperly seated main blades, a loose main shaft, or a warped/loose canopy touching the frame.<br><br>
+        <strong>Won't spool up, or motor cuts out.</strong> Check for a triggered failsafe or throttle hold, a low or damaged battery, a loose motor connector, or a bound ESC — reboot the radio and receiver and re-check binding if it persists.<br><br>
+        <strong>Radio won't bind.</strong> Confirm the radio protocol matches the receiver (e.g. ELRS vs. S-FHSS vs. DSMX), that you're within range and not near Wi-Fi/other 2.4GHz interference, and that you're following the exact bind sequence (often power-on order matters) in your heli's manual.<br><br>
+        <strong>Still stuck?</strong> Post your symptoms, heli model, and radio setup on <a href="https://www.helifreak.com" target="_blank" rel="noopener">HeliFreak</a> or <a href="https://www.reddit.com/r/RCHeli/" target="_blank" rel="noopener">r/RCHeli</a> — include a video if you can, it makes diagnosing tail/vibration issues much easier for people helping you.
+      </div>
+    </div>
+  </details>
+
+  <details class="level" id="flightLogSection">
+    <summary>
+      <div class="lvl-title">
+        <span class="chevron">▶</span>
+        <span class="lvl-name">Flight Log</span>
+      </div>
+      <div class="lvl-badge">
+        <span id="flightLogSummary">0 flights · 0 min</span>
+      </div>
+    </summary>
+    <div class="rows" style="padding: 6px 18px 18px;">
+      <div class="res-note" style="margin-top:0; border-top:none; padding-top:0;">Track total flight time and crashes separately from the maneuver checklist — it's motivating to see the numbers add up, and useful for noticing patterns (e.g. more crashes on windy days).</div>
+      <div id="flightLogTable"></div>
+      <button class="btn" id="addFlightBtn" style="margin-top:10px;">+ Add flight</button>
     </div>
   </details>
 
@@ -978,6 +1060,84 @@ document.getElementById('resetBtn').addEventListener('click', () => {
 document.getElementById('importBtn').addEventListener('click', () => {
   document.getElementById('importFile').click();
 });
+// Flight Log
+const FLIGHTLOG_KEY = 'rchn-pilot-proficiency-flightlog-v1';
+let flightLog = [];
+if (CAN_AUTOSAVE){
+  try{
+    const raw = window.localStorage.getItem(FLIGHTLOG_KEY);
+    if (raw) flightLog = JSON.parse(raw) || [];
+  }catch(e){ /* ignore corrupt storage */ }
+}
+
+function saveFlightLog(){
+  if (!CAN_AUTOSAVE) return;
+  try{ window.localStorage.setItem(FLIGHTLOG_KEY, JSON.stringify(flightLog)); }catch(e){ /* storage full or blocked */ }
+}
+
+function renderFlightLog(){
+  const wrap = document.getElementById('flightLogTable');
+  wrap.innerHTML = '';
+
+  if (flightLog.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'flight-empty';
+    empty.textContent = 'No flights logged yet — click "+ Add flight" below to start tracking.';
+    wrap.appendChild(empty);
+  } else {
+    const labels = document.createElement('div');
+    labels.className = 'flight-labels';
+    labels.innerHTML = `<span>Date</span><span>Duration (min)</span><span>Crashes</span><span>Notes</span><span></span>`;
+    wrap.appendChild(labels);
+
+    flightLog.forEach((entry, idx) => {
+      const row = document.createElement('div');
+      row.className = 'flight-row';
+      row.innerHTML = `
+        <input type="date" data-idx="${idx}" data-field="date" value="${entry.date || ''}">
+        <input type="number" min="0" data-idx="${idx}" data-field="duration" placeholder="min" value="${entry.duration || ''}">
+        <input type="number" min="0" data-idx="${idx}" data-field="crashes" placeholder="0" value="${entry.crashes || ''}">
+        <input type="text" data-idx="${idx}" data-field="notes" placeholder="Notes…" value="${(entry.notes || '').replace(/"/g,'&quot;')}">
+        <button class="flight-del" data-idx="${idx}" title="Delete flight">×</button>
+      `;
+      wrap.appendChild(row);
+    });
+  }
+
+  const totalFlights = flightLog.length;
+  const totalMin = flightLog.reduce((sum, e) => sum + (parseFloat(e.duration) || 0), 0);
+  document.getElementById('flightLogSummary').textContent = `${totalFlights} flight${totalFlights===1?'':'s'} · ${totalMin} min`;
+}
+renderFlightLog();
+
+document.getElementById('addFlightBtn').addEventListener('click', () => {
+  flightLog.push({ date: new Date().toISOString().slice(0,10), duration: '', crashes: '', notes: '' });
+  saveFlightLog();
+  renderFlightLog();
+  document.getElementById('flightLogSection').open = true;
+});
+
+document.getElementById('flightLogTable').addEventListener('input', (e) => {
+  const idx = e.target.dataset.idx;
+  const field = e.target.dataset.field;
+  if (idx === undefined || !field) return;
+  flightLog[idx][field] = e.target.value;
+  if (field === 'duration'){
+    const totalFlights = flightLog.length;
+    const totalMin = flightLog.reduce((sum, en) => sum + (parseFloat(en.duration) || 0), 0);
+    document.getElementById('flightLogSummary').textContent = `${totalFlights} flight${totalFlights===1?'':'s'} · ${totalMin} min`;
+  }
+  saveFlightLog();
+});
+
+document.getElementById('flightLogTable').addEventListener('click', (e) => {
+  if (!e.target.classList.contains('flight-del')) return;
+  const idx = parseInt(e.target.dataset.idx, 10);
+  flightLog.splice(idx, 1);
+  saveFlightLog();
+  renderFlightLog();
+});
+
 document.getElementById('importFile').addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
