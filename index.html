@@ -429,8 +429,21 @@
   </div>
 
   <div id="noStorageBanner" class="banner" style="display:none;">
-    Autosave isn't available in this preview window — your changes will disappear on refresh here. Download the file and open it directly in your browser (double-click it) for automatic saving, or use <strong>Export progress</strong> below before you close this tab.
+    Your browser is blocking local storage here (common in private/incognito mode), so progress won't save automatically on this device. Use <strong>Export progress</strong> before you close this tab, and <strong>Import progress</strong> to pick up where you left off next time.
   </div>
+
+  <details class="level" id="maneuverLogSection" open>
+    <summary>
+      <div class="lvl-title">
+        <span class="chevron">▶</span>
+        <span class="lvl-name">Maneuver Progression Log</span>
+      </div>
+    </summary>
+    <div class="sub" style="padding: 0 18px 8px;">7 levels · <span id="totalCount">—</span> maneuvers · check off each as you demonstrate it in front of a witness</div>
+    <div class="credit" style="padding: 0 18px;">Based on the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener">RCHN Pilot Proficiency Program</a> — full credit to <a href="https://www.rchn.org" target="_blank" rel="noopener">rchn.org</a> for the original maneuver list. This tool just makes it easier to track.</div>
+    <div class="credit" style="padding: 0 18px;">Progress is kept in this browser tab only — use Export to save a .json file after each session, and Import to pick up where you left off.<br>Maneuver list © <a href="https://www.rchn.org" target="_blank" rel="noopener">RCHN</a> — see the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener">original PDF</a> for the source program.</div>
+    <div id="levels" style="padding: 6px 18px 18px;"></div>
+  </details>
 
   <details class="level" id="startHereSection" open>
     <summary>
@@ -445,8 +458,9 @@
         <strong>2. Learn a few key terms.</strong> <em>BNF</em> (Bind-N-Fly — needs your own radio), <em>RTF</em> (Ready-To-Fly — radio included), <em>CP</em> (Collective Pitch — blades can go negative pitch, required for 3D), <em>flybarless</em> (electronic stabilization, standard on modern micros), <em>ELRS</em> (ExpressLRS, a popular open-source radio link protocol), <em>expo/rates</em> (how sensitive your sticks feel).<br><br>
         <strong>3. Pick your first heli and radio.</strong> See Getting Started below for beginner-friendly micro helis (Goosky S1/S2, OMP M1/M2) and radios (RadioMaster Zorro/Boxer).<br><br>
         <strong>4. Find a local club or an experienced buddy.</strong> Flying near someone who already knows the hobby is the fastest way to avoid bad habits and crashes — try the <a href="https://www.modelaircraft.org/club-finder" target="_blank" rel="noopener">AMA Club Finder</a> or ask around on <a href="https://www.reddit.com/r/RCHeli/" target="_blank" rel="noopener">r/RCHeli</a> or <a href="https://www.helifreak.com" target="_blank" rel="noopener">HeliFreak</a>. Most clubs require <a href="https://www.modelaircraft.org/membership" target="_blank" rel="noopener">AMA membership</a>, which is worth getting anyway — it includes liability insurance that covers you if your heli damages property or injures someone.<br><br>
-        <strong>5. A few safety basics before your first flight:</strong> keep hands and faces clear of spinning blades, never charge or store LiPo batteries unattended (use a fireproof bag/box), always fly with a spotter if you're near other people, and set up a throttle-cut/failsafe on your radio before you fly.<br><br>
-        <strong>6. Set expectations.</strong> A first BNF micro heli + battery + charger runs roughly $150–400 (add a radio if it's not RTF); most micros fly 5–10 minutes per charge. Comfortable hovering usually takes a few weeks of regular sim + real practice — that's normal, not a sign you're doing it wrong.<br><br>
+        <strong>5. Know the FAA rules — they're mandatory, not optional.</strong> Nearly every heli on this page weighs 250g or more, which means federal law requires you to register it with <a href="https://faadronezone-access.faa.gov" target="_blank" rel="noopener">FAADroneZone</a> and pass <a href="https://www.faa.gov/uas/recreational_flyers/knowledge_test_updates" target="_blank" rel="noopener">TRUST</a> (the Recreational UAS Safety Test — free, open-book, untimed, and never expires) before you fly, and to carry proof of both. Remote ID also applies to many models, with some nuances for community-run FRIA sites — see the FAA's <a href="https://www.faa.gov/uas/recreational_flyers" target="_blank" rel="noopener">recreational flyers page</a> for current requirements rather than relying on a summary here.<br><br>
+        <strong>6. A few safety basics before your first flight:</strong> keep hands and faces clear of spinning blades, never charge or store LiPo batteries unattended (use a fireproof bag/box), always fly with a spotter if you're near other people, set up a throttle-cut/failsafe on your radio before you fly, and skip flying if it's windy — most micros only handle a light breeze comfortably, and a calm morning beats fighting gusts every time.<br><br>
+        <strong>7. Set expectations.</strong> A first BNF micro heli + battery + charger runs roughly $150–400 (add a radio if it's not RTF); most micros fly 5–10 minutes per charge. Comfortable hovering usually takes a few weeks of regular sim + real practice — that's normal, not a sign you're doing it wrong.<br><br>
         <strong>You will crash — that's normal.</strong> Once your gear is bound and set up (see First Flight below), work through the Level 1 checklist and track your progress as you go.
       </div>
     </div>
@@ -477,11 +491,11 @@
         </div>
         <div class="res-col">
           <div class="res-heading">Batteries / Chargers</div>
-          <a href="https://www.amazon.com/dp/B0D2L17M8H?ref=ppx_yo2ov_dt_b_fed_asin_title" target="_blank" rel="noopener">2S LiPo batteries (Goosky S1)</a>
-          <a href="https://www.amazon.com/dp/B0GS5658RG?ref=ppx_yo2ov_dt_b_fed_asin_title" target="_blank" rel="noopener">4-port balance charger (Goosky S1)</a>
-          <a href="https://www.amazon.com/dp/B0B1HLK1Q6?ref=ppx_yo2ov_dt_b_fed_asin_title" target="_blank" rel="noopener">Parallel charging board (Goosky S1/S2)</a>
+          <a href="https://www.amazon.com/dp/B0D2L17M8H" target="_blank" rel="noopener">2S LiPo batteries (Goosky S1)</a>
+          <a href="https://www.amazon.com/dp/B0GS5658RG" target="_blank" rel="noopener">4-port balance charger (Goosky S1)</a>
+          <a href="https://www.amazon.com/dp/B0B1HLK1Q6" target="_blank" rel="noopener">Parallel charging board (Goosky S1/S2)</a>
           <a href="https://www.amazon.com/HOTA-D6-Pro-Batteries-Connector/dp/B0GD1HJ6G3" target="_blank" rel="noopener">HOTA D6 Pro smart charger (Goosky S1/S2)</a>
-          <a href="https://www.amazon.com/dp/B09TKLC49Z?ref=ppx_yo2ov_dt_b_fed_asin_title" target="_blank" rel="noopener">Battery capacity checker</a>
+          <a href="https://www.amazon.com/dp/B09TKLC49Z" target="_blank" rel="noopener">Battery capacity checker</a>
         </div>
         <div class="res-col">
           <div class="res-heading">Simulators</div>
@@ -497,7 +511,7 @@
           <a href="https://www.omphobby.net" target="_blank" rel="noopener">OMP M1/M2 spare parts</a>
         </div>
       </div>
-      <div class="res-note">Sim time is the highest-leverage thing a beginner can do — hours in a simulator translate directly to fewer crashes and faster progress once you're flying for real. Buy a spare set of main and tail blades (and a canopy) with your first heli — you will crash while learning, and having parts on hand means a broken blade ends a flight, not your whole session. Gear recommendations shift with the market; check HeliFreak and current-year buying guides before purchasing, since specific models come and go.</div>
+      <div class="res-note">Sim time is the highest-leverage thing a beginner can do — hours in a simulator translate directly to fewer crashes and faster progress once you're flying for real. Most radios need a USB dongle or trainer cable to talk to sim software (many EdgeTX radios can also plug in directly and act as a USB joystick) — check your radio and sim's compatibility before buying either. Buy a spare set of main and tail blades (and a canopy) with your first heli — you will crash while learning, and having parts on hand means a broken blade ends a flight, not your whole session. Gear recommendations shift with the market; check HeliFreak and current-year buying guides before purchasing, since specific models come and go.</div>
     </div>
   </details>
 
@@ -588,19 +602,6 @@
     </div>
   </details>
 
-  <details class="level" id="maneuverLogSection" open>
-    <summary>
-      <div class="lvl-title">
-        <span class="chevron">▶</span>
-        <span class="lvl-name">Maneuver Progression Log</span>
-      </div>
-    </summary>
-    <div class="sub" style="padding: 0 18px 8px;">7 levels · <span id="totalCount">—</span> maneuvers · check off each as you demonstrate it in front of a witness</div>
-    <div class="credit" style="padding: 0 18px;">Based on the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener">RCHN Pilot Proficiency Program</a> — full credit to <a href="https://www.rchn.org" target="_blank" rel="noopener">rchn.org</a> for the original maneuver list. This tool just makes it easier to track.</div>
-    <div class="credit" style="padding: 0 18px;">Progress is kept in this browser tab only — use Export to save a .json file after each session, and Import to pick up where you left off.<br>Maneuver list © <a href="https://www.rchn.org" target="_blank" rel="noopener">RCHN</a> — see the <a href="https://www.rchn.org/wp-content/uploads/2015/01/RCHN-Pilot-Proficiency-Program-Check-Sheet.pdf" target="_blank" rel="noopener">original PDF</a> for the source program.</div>
-    <div id="levels" style="padding: 6px 18px 18px;"></div>
-  </details>
-
   <div class="donate">
     <div class="donate-title">Enjoying this tool?</div>
     <p>This tracker is free and always will be. If it's helped your flying, a small tip is always appreciated!</p>
@@ -608,7 +609,7 @@
     <img class="donate-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fvenmo.com%2Fu%2Fkylehale1" alt="Venmo QR code for @kylehale1" width="160" height="160">
   </div>
 
-  <footer>Made with ❤️ for the 🚁 RC Heli Community.<br>For inquiries and suggestions: <a href="mailto:kyle.hale@gmail.com" style="color:var(--amber);">kyle.hale@gmail.com</a></footer>
+  <footer>Made with ❤️ for the 🚁 RC Heli Community.<br>For inquiries and suggestions: <a href="mailto:kyle.hale@gmail.com" style="color:var(--amber);">kyle.hale@gmail.com</a><br>Last updated: July 2026</footer>
 </div>
 
 <script>
