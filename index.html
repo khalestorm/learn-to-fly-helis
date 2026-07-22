@@ -280,6 +280,24 @@
     .res-grid{ grid-template-columns: 1fr; gap: 16px; }
   }
 
+  .donate{
+    text-align:center;
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--amber-dim);
+    border-radius: 14px;
+    padding: 24px 20px;
+    margin-top: 18px;
+  }
+  .donate-title{
+    font-family:'Oswald', sans-serif; font-size: 18px; text-transform: uppercase;
+    letter-spacing: 0.02em; color: var(--text); margin-bottom: 6px;
+  }
+  .donate p{ color: var(--text-dim); font-size: 13px; margin: 0 0 14px; }
+  .donate-qr{
+    display:block; margin: 16px auto 0; border-radius: 10px;
+    background: #fff; padding: 8px;
+  }
+
   footer{ text-align:center; color: var(--text-faint); font-size: 11.5px; margin-top: 22px; font-family:'JetBrains Mono', monospace; }
 
   @media (max-width: 720px){
@@ -296,6 +314,7 @@
     .header{ border:none; background:none; }
     .header::before{ display:none; }
     h1, .lvl-name{ color:#000; }
+    .donate{ display:none; }
     details.level{ break-inside: avoid; border-color:#ccc; background:#fff; }
     .row{ border-color:#eee; }
     .row:nth-child(odd){ background:#f7f7f7; }
@@ -466,6 +485,13 @@
     </summary>
     <div id="levels" style="padding: 6px 18px 18px;"></div>
   </details>
+
+  <div class="donate">
+    <div class="donate-title">Enjoying this tool?</div>
+    <p>This tracker is free and always will be. If it's helped your flying, a small tip is always appreciated!</p>
+    <a class="btn primary" href="https://venmo.com/u/kylehale1" target="_blank" rel="noopener">💙 Donate via Venmo — @kylehale1</a>
+    <img class="donate-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fvenmo.com%2Fu%2Fkylehale1" alt="Venmo QR code for @kylehale1" width="160" height="160">
+  </div>
 
   <footer>Made with ❤️ for the 🚁 RC Heli Community.<br>For inquiries and suggestions: <a href="mailto:kyle.hale@gmail.com" style="color:var(--amber);">kyle.hale@gmail.com</a></footer>
 </div>
