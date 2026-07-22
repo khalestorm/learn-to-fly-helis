@@ -57,6 +57,11 @@
     background-image: repeating-linear-gradient(90deg, rgba(232,163,61,0.05) 0 1px, transparent 1px 42px);
     pointer-events:none;
   }
+  .hero-img{
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    border-radius: 10px; border: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
   .eyebrow{
     font-family:'JetBrains Mono', monospace;
     font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
@@ -258,6 +263,7 @@
   @media print{
     body{ background:#fff; color:#000; padding:0; }
     .toolbar{ display:none; }
+    .hero-img{ display:none; }
     .header{ border:none; background:none; }
     .header::before{ display:none; }
     h1, .lvl-name{ color:#000; }
@@ -273,6 +279,7 @@
 <div class="wrap">
 
   <div class="header">
+    <img class="hero-img" src="hero.jpg" alt="A young boy and girl smiling while flying colorful RC helicopters at sunset">
     <div class="eyebrow">RCHN Pilot Proficiency Program</div>
     <h1>Maneuver Progression Log</h1>
     <div class="sub">7 levels · <span id="totalCount">—</span> maneuvers · check off each as you demonstrate it in front of a witness</div>
@@ -420,7 +427,15 @@
     </div>
   </details>
 
-  <div id="levels"></div>
+  <details class="level" id="maneuverLogSection" open>
+    <summary>
+      <div class="lvl-title">
+        <span class="chevron">▶</span>
+        <span class="lvl-name">Maneuver Progression Log</span>
+      </div>
+    </summary>
+    <div id="levels" style="padding: 6px 18px 18px;"></div>
+  </details>
 
   <footer>Made with ❤️ for the 🚁 RC Heli Community.<br>For inquiries and suggestions: <a href="mailto:kyle.hale@gmail.com" style="color:var(--amber);">kyle.hale@gmail.com</a></footer>
 </div>
