@@ -1089,19 +1089,32 @@ levelsEl.addEventListener('input', (e) => {
 });
 
 // Search + filter
+const autoOpenedLevels = new Set();
+
 function applyFilters(){
   const q = document.getElementById('search').value.trim().toLowerCase();
   const statusFilter = document.getElementById('statusFilter').value;
+  const filtering = !!(q || statusFilter);
+
   document.querySelectorAll('.row').forEach(row => {
     const id = row.dataset.id;
     const matchesText = !q || row.dataset.search.includes(q);
     const matchesStatus = !statusFilter || String(state[id].status) === statusFilter;
     const show = matchesText && matchesStatus;
     row.classList.toggle('hidden', !show);
-    if (show && (q || statusFilter)){
-      row.closest('details').open = true;
+    if (show && filtering){
+      const details = row.closest('details');
+      if (!details.open){
+        details.open = true;
+        autoOpenedLevels.add(details);
+      }
     }
   });
+
+  if (!filtering && autoOpenedLevels.size){
+    autoOpenedLevels.forEach(details => { details.open = false; });
+    autoOpenedLevels.clear();
+  }
 }
 document.getElementById('search').addEventListener('input', applyFilters);
 document.getElementById('statusFilter').addEventListener('change', applyFilters);
